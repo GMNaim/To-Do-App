@@ -9,3 +9,6 @@ class TaskList(models.Model):
 
     def __str__(self):
         return f"{self.task}"
+
+    class Meta:
+        ordering = ['is_completed', 'date_created']

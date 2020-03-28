@@ -8,7 +8,7 @@ from .models import TaskList
 
 
 def home(request):
-    task_list = TaskList.objects.all().order_by('-date_created')
+    task_list = TaskList.objects.all()
     context = {'task_list': task_list}
     if request.method == 'GET':
         print('=========get method===========')
@@ -47,7 +47,7 @@ def add_task(request):
 
 
 def completed_task(request):
-    task_list = TaskList.objects.all().order_by('-date_created')
+    task_list = TaskList.objects.all()
     context = {'task_list': task_list}
     if request.POST:
         task_is_checked = request.POST.get('task_is_checked')
@@ -70,7 +70,7 @@ def completed_task(request):
 
 
 def uncompleted_task(request):
-    task_list = TaskList.objects.all().order_by('-date_created')
+    task_list = TaskList.objects.all()
     context = {'task_list': task_list}
     if request.POST:
         task_is_unchecked = request.POST['task_is_unchecked']
@@ -106,7 +106,7 @@ def edit_task(request, task_id):
 
 
 def delete_task(request, task_id):
-    task_list = TaskList.objects.all().order_by('-date_created')
+    task_list = TaskList.objects.all()
     context = {'task_list': task_list}
 
     if request.POST:

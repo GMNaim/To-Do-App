@@ -48,9 +48,9 @@
                             csrfmiddlewaretoken: "{{ csrf_token }}" // csrf token for the post request
                         },
                         success: function (response) {
-                          var list_item_id = $('#li_id[data-id="' + task_id + '"]');
-                          list_item_id.slideDown();
-                          $("#task_list_container").append(list_item_id);
+                            var list_item_id = $('#li_id[data-id="' + task_id + '"]');
+                            list_item_id.slideDown();
+                            $("#task_list_container").append(list_item_id);
                             console.log(
                                 response.checked_view_text + // this values are getting from the view or server.
                                 response.task_is_checked + // if the ajax request is successful
@@ -60,8 +60,10 @@
                     });
                 } else if ($(this).is(":not(:checked)")) {
                     // checkbox is unchecked.
-                    // AJAX request is sending
-
+                    task_idd = $(this).data("id");
+                    console.log(task_idd + "--------------------");
+                    
+                     // AJAX request is sending
                     $.ajax({
                         url: "{% url 'uncompleted-task' %}",
                         type: "POST",
@@ -72,6 +74,9 @@
                             csrfmiddlewaretoken: "{{ csrf_token }}"
                         },
                         success: function (response) {
+                            var list_item_id = $('#li_id[data-id="' + task_idd + '"]');
+                            list_item_id.slideDown();
+                            $("#task_list_container").prepend(list_item_id);
                             console.log(
                                 response.unchecked_view_text +
                                 response.task_is_unchecked +
@@ -138,15 +143,15 @@
                         data: {
                             'edited_task_id': task_id,  // id of the task
                             'edited_task': inputValue,  // edited task
-                             csrfmiddlewaretoken: "{{ csrf_token }}" // csrf token for the post request
+                            csrfmiddlewaretoken: "{{ csrf_token }}" // csrf token for the post request
                         },
                         dataType: 'json',
                         success: function (response) {
-                          // to get an item with id use:  $('#span_task_id[data-id="' + task_id + '"]')
-                          $('#span_task_id[data-id="' + task_id + '"]').text(function () {
-                              return response.edited_task_from_view
-                          });
-                            console.log(response.edited_task_id_from_view + "     ===    "  + response.edited_task_from_view);
+                            // to get an item with id use:  $('#span_task_id[data-id="' + task_id + '"]')
+                            $('#span_task_id[data-id="' + task_id + '"]').text(function () {
+                                return response.edited_task_from_view
+                            });
+                            console.log(response.edited_task_id_from_view + "     ===    " + response.edited_task_from_view);
                             swal(
                                 "Nice! you have Edited your task",
                                 "Your edited task is: " + inputValue,

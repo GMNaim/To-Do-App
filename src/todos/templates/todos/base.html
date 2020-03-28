@@ -1,79 +1,78 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <title>TO DO App</title>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
-    <meta name="description" content="Mplify Bootstrap 4.1.1 Admin Template" />
-    <meta name="author" content="ThemeMakker, design by: ThemeMakker.com" />
+    <meta name="description" content="Mplify Bootstrap 4.1.1 Admin Template"/>
+    <meta name="author" content="ThemeMakker, design by: ThemeMakker.com"/>
 
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <!-- VENDOR CSS -->
     <link
-      rel="stylesheet"
-      href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}"
+            rel="stylesheet"
+            href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}"
     />
     <link
-      rel="stylesheet"
-      href="{% static 'assets/vendor/animate-css/animate.min.css' %}"
+            rel="stylesheet"
+            href="{% static 'assets/vendor/animate-css/animate.min.css' %}"
     />
     <link
-      rel="stylesheet"
-      href="{% static 'assets/vendor/font-awesome/css/font-awesome.min.css' %}"
+            rel="stylesheet"
+            href="{% static 'assets/vendor/font-awesome/css/font-awesome.min.css' %}"
     />
     <link
-      rel="stylesheet"
-      href="{% static 'assets/vendor/nestable/jquery-nestable.css' %}"
+            rel="stylesheet"
+            href="{% static 'assets/vendor/nestable/jquery-nestable.css' %}"
     />
     <link
-      rel="stylesheet"
-      href="{% static 'assets/vendor/sweetalert/sweetalert.css' %}"
+            rel="stylesheet"
+            href="{% static 'assets/vendor/sweetalert/sweetalert.css' %}"
     />
 
     <!-- Material Design Bootstrap -->
-    <link rel="stylesheet" href="{% static 'light/assets/css/mdb.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'light/assets/css/mdb.min.css' %}"/>
 
     <!-- MAIN CSS -->
-    <link rel="stylesheet" href="{% static 'light/assets/css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'light/assets/css/main.css' %}"/>
     <link
-      rel="stylesheet"
-      href="{% static 'light/assets/css/color_skins.css' %}"
+            rel="stylesheet"
+            href="{% static 'light/assets/css/color_skins.css' %}"
     />
-    <link rel="stylesheet" href="{% static 'light/assets/css/custom.css' %}" />
-  </head>
-  <body class="theme-blue">
-    <!-- Page Loader -->
-    <div class="page-loader-wrapper">
-      <div class="loader">
+    <link rel="stylesheet" href="{% static 'light/assets/css/custom.css' %}"/>
+</head>
+<body class="theme-blue">
+<!-- Page Loader -->
+<div class="page-loader-wrapper">
+    <div class="loader">
         <div class="m-t-30">
-          <img
-            src="{% static 'img/todo_background.png' %}"
-            width="48"
-            height="48"
-            alt="todo_list"
-          />
+            <img
+                    src="{% static 'img/todo_background.png' %}"
+                    width="48"
+                    height="48"
+                    alt="todo_list"
+            />
         </div>
         <p>Please wait...</p>
-      </div>
     </div>
+</div>
 
-    <div id="wrapper">
-      <div id="main-content" style="padding-left: 0; padding-right: 0;">
-        {% block main-content %} {% endblock %}
-      </div>
-    </div>
+<div id="wrapper" style="display: flex; justify-content: start; flex-direction: column">
+    {% block main-content %} {% endblock %}
 
-    {% block timepicker_js %} {% endblock %}
+</div>
 
+{% block timepicker_js %} {% endblock %}
 
 
-    {% block scripts %}
-        {% include 'todos/scripts.html' %}
-    {% endblock %}
-  </body>
+
+{% block scripts %}
+    {% include 'todos/scripts.html' %}
+{% endblock %}
+</body>
 </html>
