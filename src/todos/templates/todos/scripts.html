@@ -1,0 +1,207 @@
+{% extends 'todos/base.html' %} {% load static %} {% block scripts %}
+
+    <!-- Javascript -->
+    <script src="{% static 'light/assets/bundles/libscripts.bundle.js' %}"></script>
+
+    <script src="{% static 'assets/vendor/nestable/jquery.nestable.js' %}"></script>
+    <!-- Jquery Nestable -->
+
+    <script src="{% static 'light/assets/bundles/mainscripts.bundle.js' %}"></script>
+    <script src="{% static 'light/assets/js/pages/ui/sortable-nestable.js' %}"></script>
+
+    <script src="{% static 'light/assets/js/pages/ui/dialogs.js' %}"></script>
+
+    <script src="{% static 'assets/vendor/sweetalert/sweetalert.min.js' %}"></script>
+    <!-- SweetAlert Plugin Js -->
+
+    <script>
+        // jquery
+        $(function () {
+            $(".js-sweetalert").on("click", function () {
+                var type = $(this).data("type");
+                var task_id = $(this).data("id");
+                var task_text = $(this).attr('data-text_value');
+                console.log("task_text=" + task_text + "-----------------" + 'task_id=' + task_id);
+
+                if (type === "confirm") {
+                    showDeleteConfirmMessage(task_id);
+                } else if (type === "prompt") {
+                    showPromptMessage();
+                } else if (type === "prompt-edit") {
+                    showPromptMessageForEdit(task_text, task_id);
+                }
+            });
+
+            // for checking if the checkbox is checked or not. then sending ajax request to the server
+            $("input[type=checkbox]").click(function () {
+                if ($(this).is(":checked")) {
+                    // AJAX request is sending
+                    task_id = $(this).data("id");
+                    console.log(task_id + "--------------------");
+                    $.ajax({
+                        url: "{% url 'completed-task' %}",
+                        type: "POST",
+                        data: {
+                            // data which will send to the server/view function
+                            task_checked_id: task_id,
+                            task_is_checked: "True",
+                            csrfmiddlewaretoken: "{{ csrf_token }}" // csrf token for the post request
+                        },
+                        success: function (response) {
+                          var list_item_id = $('#li_id[data-id="' + task_id + '"]');
+                          list_item_id.slideDown();
+                          $("#task_list_container").append(list_item_id);
+                            console.log(
+                                response.checked_view_text + // this values are getting from the view or server.
+                                response.task_is_checked + // if the ajax request is successful
+                                response.task_checked_id
+                            );
+                        }
+                    });
+                } else if ($(this).is(":not(:checked)")) {
+                    // checkbox is unchecked.
+                    // AJAX request is sending
+
+                    $.ajax({
+                        url: "{% url 'uncompleted-task' %}",
+                        type: "POST",
+                        data: {
+                            // data which will go to the view function (def uncompleted_task(request))
+                            task_unchecked_id: $(this).data("id"),
+                            task_is_unchecked: "False", // here task_is_unchecked=False means the checkbox is unchecked. just assigning a sting value "False"
+                            csrfmiddlewaretoken: "{{ csrf_token }}"
+                        },
+                        success: function (response) {
+                            console.log(
+                                response.unchecked_view_text +
+                                response.task_is_unchecked +
+                                response.task_unchecked_id +
+                                "!"
+                            );
+                        }
+                    });
+                }
+            });
+        }); // main jequry block end
+
+        function showPromptMessage() {
+            swal(
+                {
+                    title: "Add task",
+                    text: "Write something about your task:",
+                    type: "input",
+                    name: "add_task",
+                    id: "add_task",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Write something"
+                },
+                function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("You need to write something!");
+                        return false;
+                    }
+                    swal(
+                        "Nice! you have added your task",
+                        "Your task is: " + inputValue,
+                        "success"
+                    );
+                }
+            );
+        }
+
+        function showPromptMessageForEdit(old_task, task_id) {
+            console.log(old_task + '  ====  in showPromptMessageForEdit function and task_id= ' + task_id);
+            swal(
+                {
+                    title: "Edit Task!",
+                    text: "Edit your task:",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Edit task",
+                    inputValue: old_task  // getting the text of the span
+                },
+                function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("You need to write something!");
+                        return false;
+                    }
+
+                    $.ajax({
+                        url: task_id + '/edit/',
+                        type: 'POST',
+                        data: {
+                            'edited_task_id': task_id,  // id of the task
+                            'edited_task': inputValue,  // edited task
+                             csrfmiddlewaretoken: "{{ csrf_token }}" // csrf token for the post request
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                          // to get an item with id use:  $('#span_task_id[data-id="' + task_id + '"]')
+                          $('#span_task_id[data-id="' + task_id + '"]').text(function () {
+                              return response.edited_task_from_view
+                          });
+                            console.log(response.edited_task_id_from_view + "     ===    "  + response.edited_task_from_view);
+                            swal(
+                                "Nice! you have Edited your task",
+                                "Your edited task is: " + inputValue,
+                                "success"
+                            );
+                        },
+
+                    });
+
+                }
+            );
+        }
+
+        function showDeleteConfirmMessage(task_id) {
+            console.log(task_id + 'in showDeleteConfirmMessage function');
+            swal(
+                {
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this anymore!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc3545",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function (isConfirm) {
+                    if (!isConfirm) return;
+
+                    var dataId = task_id;
+                    console.log(dataId + "=======================");
+
+                    // AJAX request is sending
+                    $.ajax({
+                        url: dataId + "/delete/",
+                        type: "POST",
+                        data: {
+                            // data which will send to the server/view function
+                            deleted_task_id: dataId,
+                            csrfmiddlewaretoken: "{{ csrf_token }}" // csrf token for the post request
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                            $('#li_id[data-id="' + dataId + '"]').remove();
+                            swal("Deleted!", "Task deleted Successfully!", "success");
+                            console.log(
+                                response.deleted_task_id_from_view + response.deleted_text);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            swal("Error Deleting!", "Please try again", "error");
+                            console.log(xhr, ajaxOptions, thrownError);
+                        }
+                    });
+                }
+            );
+        }
+    </script>
+
+{% endblock %}

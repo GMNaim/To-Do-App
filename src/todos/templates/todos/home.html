@@ -1,0 +1,135 @@
+{% extends 'todos/base.html' %}
+{% load static %}
+
+{% block main-content %}
+
+    <div class="container-fluid" style="padding-left: 0; padding-right: 0; width: 1093px; margin: 0;">
+        <div class="block-header" style="margin-top: 0; margin-bottom: 5px;">
+            <div class="row">
+                <div class="col-lg-5 col-md-6">
+                    <h2>To Do List</h2>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row clearfix" style="padding-left: 0;">
+
+            <div class="col-md-7 col-sm-7" style="padding-left: 0;">
+                <div class="card">
+
+                    <div class="card" style="margin-bottom: 0px;">
+
+                        {#                        <div class="body" style="padding-bottom: 0px">#}
+                        {#                            <button class="btn btn-primary js-sweetalert" data-type="prompt">Add Task</button>#}
+                        {#                        </div>#}
+                        <form action="{% url 'add-task' %}" id="create_task_form" method="POST"
+                              class="d-flex justify-content-between">
+                            {% csrf_token %}
+                            <div class="form-control" style="white-space: nowrap">
+                                <label for="add_task"></label>
+                                <input type="text" placeholder="Add Task" name="add_task" id="add_task" required
+                                       class="form-control col-lg-7" style="display: inline-block">
+                                <!-- Time Picker -->
+                                <label for="input_endtime" style="display: inline-block"></label>
+                                <input placeholder="Select time" type="text" id="input_endtime" name="input_endtime"
+                                       required
+                                       class="form-control timepicker col-lg-3" style="display: inline-block">
+                                <!-- Time Picker -->
+
+                                <button class="btn btn-outline-purple" type="submit"
+                                        style="padding: 5px 10px;">Add
+                                </button>
+
+                            </div>
+                        </form>
+
+
+                    </div>
+
+
+                    <hr>
+
+                    <div class="body todo_list" style="padding-right: 0">
+                        <div class="dd nestable-with-handle">
+                            <ol class="dd-list" id="task_list_container">
+                                {% for task in task_list %}
+                                    <!-- Task -->
+                                    <li class="dd-item dd3-item" id="li_id" data-id="{{ task.id }}">
+                                        <div class="dd-handle dd3-handle"></div>
+                                        <div class="dd3-content">
+                                            <label class="fancy-checkbox" id="label_id">
+                                                {% if task.is_completed %}
+                                                    <input type="checkbox" name="checkbox" checked id="checkbox_id"
+                                                           data-type="checkbox-checked" data-id="{{ task.id }}">
+                                                {% else %}
+                                                    <input type="checkbox" name="checkbox" id="checkbox_id"
+                                                           data-id="{{ task.id }}">
+                                                {% endif %}
+                                                <span id="span_task_id" data-id="{{ task.id }}">
+                                                <i class=" icon-calendar m-r-5"></i>{{ task.task }}</span>
+                                            </label>
+
+                                            <span class="badge badge-warning">{{ task.time_left | timeuntil }} left</span>
+                                            <button type="button" data-type="prompt-edit" id="edit_button_id"
+                                                    data-id="{{ task.id }}"
+                                                    data-text_value="{{ task.task }}"
+                                                    class="btn btn-primary js-sweetalert"
+                                                    title="Edit"
+                                                    style="
+                                                padding: 0 2px 3px;
+                                                border-right-width: 0;
+                                                border-left-width: 0;
+                                                width: 20px;
+                                                height: 21px;">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-type="confirm" id="delete_button_id"
+                                                    data-id="{{ task.id }}" class="btn btn-danger js-sweetalert"
+                                                    title="Delete"
+                                                    style="
+                                                padding: 0 2px 3px;
+                                                border-right-width: 0;
+                                                border-left-width: 0;
+                                                width: 20px;
+                                                height: 21px;">
+                                                <i class="fa fa-trash-o"></i>
+                                            </button>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            </ol>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block timepicker_js %}
+    <!-- scripts For time picker -->
+    <script src="{% static 'light/assets/js/jquery-3.4.1.min.js' %}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{% static 'light/assets/js/mdb.min.js' %}"></script>
+    <script>
+        // Time Picker Initialization
+        $('#input_starttime').pickatime({
+            twelvehour: true
+        });
+        $('#input_endtime').pickatime({
+            // 12 or 24 hour
+            twelvehour: false,
+            // Light or Dark theme
+            darktheme: true
+        });
+    </script>
+    <!-- END scripts For time picker -->
+{% endblock %}
