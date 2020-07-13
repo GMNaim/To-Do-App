@@ -2,6 +2,7 @@ from django.db import models
 
 
 class TaskList(models.Model):
+    """ Task list table """
     task = models.TextField(max_length=300)
     is_completed = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)

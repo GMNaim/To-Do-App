@@ -37,7 +37,6 @@
                 if ($(this).is(":checked")) {
                     // AJAX request is sending
                     task_id = $(this).data("id");
-                    console.log(task_id + "--------------------");
                     $.ajax({
                         url: "{% url 'completed-task' %}",
                         type: "POST",
@@ -51,17 +50,16 @@
                             var list_item_id = $('#li_id[data-id="' + task_id + '"]');
                             list_item_id.slideDown();
                             $("#task_list_container").append(list_item_id);
-                            console.log(
-                                response.checked_view_text + // this values are getting from the view or server.
-                                response.task_is_checked + // if the ajax request is successful
-                                response.task_checked_id
-                            );
+                            {#console.log(#}
+                            {#    response.checked_view_text + // this values are getting from the view or server.#}
+                            {#    response.task_is_checked + // if the ajax request is successful#}
+                            {#    response.task_checked_id#}
+                            {#);#}
                         }
                     });
                 } else if ($(this).is(":not(:checked)")) {
                     // checkbox is unchecked.
                     task_idd = $(this).data("id");
-                    console.log(task_idd + "--------------------");
                     
                      // AJAX request is sending
                     $.ajax({
@@ -77,12 +75,6 @@
                             var list_item_id = $('#li_id[data-id="' + task_idd + '"]');
                             list_item_id.slideDown();
                             $("#task_list_container").prepend(list_item_id);
-                            console.log(
-                                response.unchecked_view_text +
-                                response.task_is_unchecked +
-                                response.task_unchecked_id +
-                                "!"
-                            );
                         }
                     });
                 }
