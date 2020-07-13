@@ -22,6 +22,8 @@ These instructions will get you a copy of the project up and running on your loc
 
  Run this command to start the server in the ```[src]``` directory: ```[python manage.py runserver]``` 
 
+### DEMO
+![Farmers Market Finder Demo](demo/demo.gif)
 
 ## Authors
 
